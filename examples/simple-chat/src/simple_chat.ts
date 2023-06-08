@@ -48,6 +48,10 @@ class ChatUI {
       }
     };
 
+    getElementAndCheck("memoryblocks").onclick = (event) => {
+      alert("Your Memory blocks \n\n" + localStorage.getItem("message"));
+    };
+
     const modelSelector = getElementAndCheck("chatui-select") as HTMLSelectElement;
     for (let i = 0; i < this.config.model_list.length; ++i) {
       const item = this.config.model_list[i];
@@ -217,7 +221,13 @@ class ChatUI {
     };
 
     try {
-      const output = await this.chat.generate(prompt, callbackUpdateResponse);
+      var messageOld = localStorage.getItem("message");
+      var promptNew = "Context:  " + messageOld + "\n\n\n Questions: " + prompt;
+      console.log("promptNew-->", promptNew);
+      const output = await this.chat.generate(
+        promptNew,
+        callbackUpdateResponse
+      );
       this.updateLastMessage("left", output);
       this.uiChatInfoLabel.innerHTML = await this.chat.runtimeStatsText();
     } catch (err) {

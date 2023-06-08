@@ -4,7 +4,7 @@
    justify-content: space-between;
    width: 100%;
    max-width: 867px;
-   margin: 25px 10px;
+   margin: 25px auto;
    height: 600px;
    border: 2px solid #ddd;
    border-radius: 5px;
@@ -42,6 +42,7 @@
    display: flex;
    align-items: flex-end;
    margin-bottom: 10px;
+   width: 100%;
  }
 
  .msg:last-of-type {
@@ -50,9 +51,10 @@
 
  .msg-bubble {
    max-width: 450px;
-   padding: 15px;
+   padding: 5px;
    border-radius: 15px;
    background: #ececec;
+   display: inline-flex;
  }
 
  .left-msg .msg-bubble {
@@ -60,13 +62,13 @@
  }
 
  .error-msg .msg-bubble {
-  border-bottom-left-radius: 0;
-  color: #f15959;
-}
+   border-bottom-left-radius: 0;
+   color: #f15959;
+ }
 
-.init-msg .msg-bubble {
-  border-bottom-left-radius: 0;
-}
+ .init-msg .msg-bubble {
+   border-bottom-left-radius: 0;
+ }
 
  .right-msg {
    flex-direction: row-reverse;
@@ -107,21 +109,48 @@
  }
 
  .chatui-reset-btn:hover {
-  background: #dcdada;
-}
+   background: #dcdada;
+ }
 
  .chatui-send-btn {
-  margin-left: 10px;
-  background: #579ffb;
-  color: #fff;
-  font-weight: bold;
-  cursor: pointer;
-}
+   margin-left: 10px;
+   background: #579ffb;
+   color: #fff;
+   font-weight: bold;
+   cursor: pointer;
+ }
 
-.chatui-send-btn:hover {
-  background: #577bfb;
-}
+ .chatui-send-btn:hover {
+   background: #577bfb;
+ }
 
  .chatui-chat {
    background-color: #fcfcfe;
+ }
+
+
+ canvas {
+   display: block;
+   margin: 0 auto;
+ }
+
+ .dialog {
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+   background-color: #fff;
+   padding: 20px;
+   border-radius: 10px;
+   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+ }
+
+ button {
+   display: block;
+   margin: 10px auto;
+   padding: 5px 10px;
+   border: none;
+   background-color: #ccc;
+   border-radius: 5px;
+   cursor: pointer;
  }

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>AI human</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        canvas {
+            display: block;
+            /* margin: ; */
+        }
+
+        .dialog {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        button {
+            display: block;
+            margin: 10px auto;
+            padding: 5px 10px;
+            border: none;
+            background-color: #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+    <div class="dialog" style="display: none;">
+            <p>Save your memory blocks.</p>
+            <textarea id="message" style="width: 100%; height: 100%;"></textarea>
+            <div style="display:flex;">
+                <button id="send">Save</button>
+                <button id="close">Close</button>
+            </div>
+        </div>
+        <audio id="bgm" loop>
+            <source src="bgm.mp3" type="audio/mpeg">
+        </audio>
+        <img id="bg" width="750" src="room.jpeg" style="display: none;">
+        <img id="sprite" src="sprite.png" style="display: none;">
+    
+    <script>
+        var canvas = document.getElementById("canvas");
+        var ctx = canvas.getContext("2d");
+        var w = canvas.width =  window.innerWidth //> 750 ? 750 : window.innerWidth;
+        var h = canvas.height = window.innerHeight;
+        var spriteSize = 50;
+        var spriteX = w / 2 - spriteSize / 2;
+        var spriteY = h / 2 - spriteSize / 2;
+        var spriteSpeed = 2;
+        var spriteDirection = randomDirection();
+        var dialog = document.querySelector(".dialog");
+        var message = document.getElementById("message");
+        var sendButton = document.getElementById("send");
+        var closeButton = document.getElementById("close");
+        var bgm = document.getElementById("bgm");
+        var bg = document.getElementById("bg");
+        var sprite = document.getElementById("sprite");
+        var isHoveringSprite = false;
+        var spritePaused = false;
+
+        window.addEventListener("resize", function () {
+            w = canvas.width = window.innerWidth;// > 750 ? 750 : window.innerWidth;
+            h = canvas.height = window.innerHeight;
+            spriteX = w / 2 - spriteSize / 2;
+            spriteY = h / 2 - spriteSize / 2;
+        });
+
+        canvas.addEventListener("mousemove", function (e) {
+            isHoveringSprite = isInsideSprite(e.clientX, e.clientY);
+            canvas.style.cursor = isHoveringSprite ? "pointer" : "default";
+            spritePaused = isHoveringSprite;
+        });
+
+        canvas.addEventListener("mousedown", function (e) {
+            if (isHoveringSprite) {
+                dialog.style.display = "block";
+            } else {
+                dialog.style.display = "none";
+            }
+        });
+
+        sendButton.addEventListener("click", function () {
+            // alert("你说：" + message.value);
+            
+            dialog.style.display = "none";
+            var messageOld = localStorage.getItem("message")
+            localStorage.setItem("message", messageOld +"\n" +  message.value)
+            message.value = "";
+        });
+
+        closeButton.addEventListener("click", function () {
+            dialog.style.display = "none";
+        });
+
+        function draw () {
+            ctx.drawImage(bg, 0, 0, w, h);
+            drawSprite();
+            requestAnimationFrame(draw);
+        }
+
+        function drawSprite () {
+            ctx.drawImage(sprite, spriteX, spriteY, spriteSize, spriteSize);
+        }
+
+        function updateSprite () {
+            if (!spritePaused) {
+                switch (spriteDirection) {
+                    case "up":
+                        if (spriteY - spriteSpeed >= 0) {
+                            spriteY -= spriteSpeed;
+                        } else {
+                            spriteDirection = randomDirection();
+                        }
+                        break;
+                    case "down":
+                        if (spriteY + spriteSpeed + spriteSize <= h) {
+                            spriteY += spriteSpeed;
+                        } else {
+                            spriteDirection = randomDirection();
+                        }
+                        break;
+                    case "left":
+                        if (spriteX - spriteSpeed >= 0) {
+                            spriteX -= spriteSpeed;
+                        } else {
+                            spriteDirection = randomDirection();
+                        }
+                        break;
+                    case "right":
+                        if (spriteX + spriteSpeed + spriteSize <= w) {
+                            spriteX += spriteSpeed;
+                        } else {
+                            spriteDirection = randomDirection();
+                        }
+                        break;
+                }
+            }
+        }
+
+        function randomDirection () {
+            var directions = ["up", "down", "left", "right"];
+            return directions[Math.floor(Math.random() * directions.length)];
+        }
+
+        function isInsideSprite (x, y) {
+            return x >= spriteX && x <= spriteX + spriteSize && y >= spriteY && y <= spriteY + spriteSize;
+        }
+
+        bg.onload = function () {
+            bg.style.display = "block";
+            // bgm.play();
+            sprite.style.display = "block";
+            requestAnimationFrame(draw);
+            setInterval(updateSprite, 50);
+            bg.style.display = "none";
+            sprite.style.display = "none";
+        };
+    </script>
+</body>
+
+</html>
